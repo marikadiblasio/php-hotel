@@ -39,18 +39,40 @@ $hotels = [
     ],
 
 ];
-if(!empty($_GET["park"])){
-    $park = ($_GET["park"] === 'true') ? true : false;
-     var_dump($park);
-     var_dump($_GET["park"]);
+if(!empty($_GET["park"]) || !empty($_GET["vote"])){
     $filteredHotels = [];
-    // var_dump($filteredHotels);
-    foreach($hotels as $hotel){
-    if($hotel['parking'] == $park){
-        $filteredHotels[] = $hotel;
-    // var_dump($filteredHotels);
-
+    if(!empty($_GET["park"])){
+        $park = ($_GET["park"] === 'true') ? true : false;
+        $parkFilteredHotels = [];
+        foreach($hotels as $hotel){
+        if($hotel['parking'] == $park){
+            $parkFilteredHotels[] = $hotel;
+        }
+        // var_dump($parkFilteredHotels);
+        }
     }
+    if(!empty($_GET["vote"])){
+        $vote = $_GET["vote"];
+        $voteFilteredHotels = [];
+        foreach($hotels as $hotel){
+            if($hotel['vote'] >= $vote){
+                $voteFilteredHotels[] = $hotel;
+            }
+        // var_dump($voteFilteredHotels);
+        }
+    }
+    if(!empty($parkFilteredHotels) && !empty($voteFilteredHotels)){
+        foreach($parkFilteredHotels as $hotel){
+            if(in_array($hotel, $voteFilteredHotels)){
+                $filteredHotels[] = $hotel;
+            }
+        }
+    }
+    elseif(!empty($parkFilteredHotels)){
+        $filteredHotels = $parkFilteredHotels;
+    }
+    elseif(!empty($voteFilteredHotels)){
+        $filteredHotels = $voteFilteredHotels;
     }
 } else{
     $filteredHotels = $hotels;
@@ -78,7 +100,9 @@ if(!empty($_GET["park"])){
                 <option value="true">Con parcheggio</option>
                 <option value="false">Senza parcheggio</option>
             </select>
+            <input class="form-control w-25 me-3" placeholder="Voto dell'hotel" type="number" name="vote" min="1" max="5" id="vote">
             <button class="btn btn-info" type="submit">Cerca</button>
+            <!-- <button class="btn btn-info" type="reset">Annulla</button> -->
         </form>
         <table class="table table-hover w-75 mx-auto">
             <thead>

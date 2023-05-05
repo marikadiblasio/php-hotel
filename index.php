@@ -45,10 +45,9 @@ if(!empty($_GET["park"]) || !empty($_GET["vote"])){
         $park = ($_GET["park"] === 'true') ? true : false;
         $parkFilteredHotels = [];
         foreach($hotels as $hotel){
-        if($hotel['parking'] == $park){
-            $parkFilteredHotels[] = $hotel;
-        }
-        // var_dump($parkFilteredHotels);
+            if($hotel['parking'] == $park){
+                $parkFilteredHotels[] = $hotel;
+            }
         }
     }
     if(!empty($_GET["vote"])){
@@ -58,7 +57,6 @@ if(!empty($_GET["park"]) || !empty($_GET["vote"])){
             if($hotel['vote'] >= $vote){
                 $voteFilteredHotels[] = $hotel;
             }
-        // var_dump($voteFilteredHotels);
         }
     }
     if(!empty($parkFilteredHotels) && !empty($voteFilteredHotels)){
@@ -124,6 +122,9 @@ if(!empty($_GET["park"]) || !empty($_GET["vote"])){
                 </tr <?php } ?>>
             </tbody>
         </table>
+        <?php if(!count($filteredHotels)) { ?>
+            <h3 class="text-info">La tua ricerca non ha prodotto risultati</h3>
+        <?php }?>
     </div>
 </body>
 </html>
